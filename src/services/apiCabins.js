@@ -18,12 +18,18 @@ export async function createEditCabin(newCabin, id) {
     "/",
     ""
   );
+
+  console.log("imageName", imageName);
+
   const imagePath = hasImagePath
     ? newCabin.image
     : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
 
   // 1. Create/edit cabin
   let query = supabase.from("cabins");
+
+  console.log("imageName", imageName);
+  console.log("imagePath", imagePath);
 
   // A) CREATE
   if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
@@ -33,11 +39,14 @@ export async function createEditCabin(newCabin, id) {
 
   const { data, error } = await query.select().single();
 
+  console.log("insert data", data);
+
   if (error) {
     console.error(error);
     throw new Error("Cabin could not be created");
   }
-
+  
+  // First we creat the rows for the cabin then we insert images in it
   // 2. Upload image
   if (hasImagePath) return data;
 
@@ -48,7 +57,7 @@ export async function createEditCabin(newCabin, id) {
   // 3. Delete the cabin IF there was an error uplaoding image
   if (storageError) {
     await supabase.from("cabins").delete().eq("id", data.id);
-    console.error(storageError);
+    console.log("storage upload error",storageError);
     throw new Error(
       "Cabin image could not be uploaded and the cabin was not created"
     );
