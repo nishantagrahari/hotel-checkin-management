@@ -69,6 +69,6 @@ This project leverages a range of modern frontend technologies and design patter
 Clone the repository and install dependencies:
 
 ```bash
-cd the-wild-oasis
 npm install
+npm run dev
 # hotel-checkin-management
