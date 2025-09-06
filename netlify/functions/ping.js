@@ -6,10 +6,11 @@ exports.handler = async function(event, context) {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   // Harmless query to keep DB awake
-  await supabase.from('cabins').select('id').limit(1);
+  let res= await supabase.from('cabins').select('id').limit(1);
 
   return {
     statusCode: 200,
+    result:res,
     body: 'Pinged Supabase!',
   };
 };
